@@ -37,15 +37,15 @@ final class Hercules {
 		}
 
 		if ( did_action( 'muplugins_loaded' ) ) {
-			// show error, not in sunrise.
+			wp_die( 'Hercules must be loaded in your <code>sunrise.php</code>.' );
 		}
 
 		if ( ! is_multisite() ) {
-			// show error, not multisite.
+			wp_die( 'Hercules requires WordPress to be in multisite mode.' );
 		}
 
-		if ( ! function_exists( 'get_site_by_path' ) ) {
-			// show error, bad wp version.
+		if ( ! class_exists( 'WP_Site' ) ) {
+			wp_die( 'Hercules requires WordPress 4.5 or newer. Update now!' );
 		}
 
 		$this->start();
