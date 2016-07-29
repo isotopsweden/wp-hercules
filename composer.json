@@ -1,5 +1,5 @@
 {
-  "name": "isotopsweden/hercules",
+  "name": "isotopsweden/wp-hercules",
   "type": "wordpress-muplugin",
   "license": "MIT",
   "description": "Simple domain mapping",

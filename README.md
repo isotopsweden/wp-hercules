@@ -1,7 +1,7 @@
 # Hercules
 
 > Requires PHP 5.6 and WordPress 4.5
-
+f
 Simple domain mapping.
 
 ## Installation
@@ -20,7 +20,7 @@ Create `wp-content/sunrise.php`
 // Default mu-plugins directory if you haven't set it.
 defined( 'WPMU_PLUGIN_DIR' ) or define( 'WPMU_PLUGIN_DIR', WP_CONTENT_DIR . '/mu-plugins' );
 
-require WPMU_PLUGIN_DIR . '/hercules/sunrise.php';
+require WPMU_PLUGIN_DIR . '/wp-hercules/sunrise.php';
 ```
 
 Additionally, in order for `sunrise.php` to be loaded, you must add the following to your `wp-config.php`:
