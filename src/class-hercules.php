@@ -232,10 +232,12 @@ final class Hercules {
 
 	/**
 	 * Start domain mapping.
+	 *
+	 * @return bool
 	 */
 	public function start() {
 		if ( ! ( $site = $this->get_site() ) ) {
-			return;
+			return false;
 		}
 
 		// Set global variables.
@@ -247,5 +249,8 @@ final class Hercules {
 		 * Hercules is loaded.
 		 */
 		do_action( 'hercules_loaded' );
+
+		// Started!
+		return true;
 	}
 }

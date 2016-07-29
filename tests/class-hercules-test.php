@@ -165,4 +165,16 @@ class Hercules_Test extends WP_UnitTestCase {
 		$this->assertSame( 'http://test.dev/wp/wp-admin/', $hercules->mangle_url( 'http://test-en.dev/wp/wp-admin/' ) );
 		$hercules->destroy();
 	}
+
+	public function test_start() {
+		$hercules = Hercules::instance();
+
+		$_SERVER['HTTP_HOST'] = 'missing.dev';
+		$this->assertFalse( $hercules->start() );
+		$hercules->destroy();
+
+		$_SERVER['HTTP_HOST'] = 'test.dev';
+		$this->assertTrue( $hercules->start() );
+		$hercules->destroy();
+	}
 }
