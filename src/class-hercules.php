@@ -36,14 +36,17 @@ final class Hercules {
 			return;
 		}
 
+		// Don't continue if not in sunrise.
 		if ( did_action( 'muplugins_loaded' ) ) {
 			wp_die( 'Hercules must be loaded in your <code>sunrise.php</code>.' );
 		}
 
+		// Don't continue if not in multisite mode.
 		if ( ! is_multisite() ) {
 			wp_die( 'Hercules requires WordPress to be in multisite mode.' );
 		}
 
+		// Don't continue if `WP_Site` don't exists.
 		if ( ! class_exists( 'WP_Site' ) ) {
 			wp_die( 'Hercules requires WordPress 4.5 or newer. Update now!' );
 		}
