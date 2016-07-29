@@ -83,11 +83,17 @@ final class Hercules {
 	}
 
 	/**
-	 * Get current domain.
+	 * Get domain from current site or from `HTTP_HOST`.
+	 *
+	 * @param  int $blog_id Optional, default zero.
 	 *
 	 * @return string
 	 */
-	public function get_domain() {
+	public function get_domain( $blog_id = 0 ) {
+		if ( ! empty( $blog_id ) && $site = $this->get_site( $blog_id ) ) {
+			return $site->domain;
+		}
+
 		if ( $this->site instanceof WP_Site ) {
 			return $this->site->domain;
 		}
@@ -108,9 +114,15 @@ final class Hercules {
 	/**
 	 * Get site by the current domain.
 	 *
+	 * @param  int $blog_id Optional, default zero.
+	 *
 	 * @return WP_Site|null
 	 */
-	public function get_site() {
+	public function get_site( $blog_id = 0 ) {
+		if ( ! empty( $blog_id ) && $blog = get_blog_details( $blog_id ) ) {
+			$this->site = new WP_Site( $blog );
+		}
+
 		if ( $this->site instanceof WP_Site ) {
 			return $this->site;
 		}
@@ -135,27 +147,30 @@ final class Hercules {
 	 * Mangle url to right domain.
 	 *
 	 * @param  string $url
+	 * @param  string $path
+	 * @param  string $orig_scheme
+	 * @param  int    $blog_id
 	 *
 	 * @return string
 	 */
-	public function mangle_url( $url ) {
+	public function mangle_url( $url, $path = '', $orig_scheme = '', $blog_id = 0 ) {
 		$domain = parse_url( $url, PHP_URL_HOST );
 		$regex = '#^(\w+://)' . preg_quote( $domain, '#' ) . '#i';
 
-		return preg_replace( $regex, '${1}' . $this->get_domain(), $url );
+		return preg_replace( $regex, '${1}' . $this->get_domain( $blog_id ), $url );
 	}
 
 	/**
 	 * Must use plugins loaded hook.
 	 */
 	public function muplugins_loaded() {
-		add_filter( 'site_url', [$this, 'mangle_url'], -10 );
-		add_filter( 'home_url', [$this, 'mangle_url'], -10 );
+		add_filter( 'site_url', [$this, 'mangle_url'], -10, 4 );
+		add_filter( 'home_url', [$this, 'mangle_url'], -10, 4 );
 
 		// Only change network site urls for main site.
 		if ( is_main_site() ) {
-			add_filter( 'network_site_url', [$this, 'mangle_url'], -10 );
-			add_filter( 'network_home_url', [$this, 'mangle_url'], -10 );
+			add_filter( 'network_site_url', [$this, 'mangle_url'], -10, 4 );
+			add_filter( 'network_home_url', [$this, 'mangle_url'], -10, 4 );
 		}
 
 		$this->set_cookie_domain();
