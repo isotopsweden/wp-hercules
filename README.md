@@ -1,7 +1,7 @@
 # Hercules
 
 > Requires PHP 5.6 and WordPress 4.5
-f
+
 Simple domain mapping.
 
 ## Installation
