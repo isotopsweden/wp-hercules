@@ -94,6 +94,16 @@ class Hercules_Test extends WP_UnitTestCase {
 		$hercules->destroy();
 	}
 
+	public function test_get_domain_ports() {
+		$hercules = Hercules::instance();
+
+		$_SERVER['HTTP_HOST'] = 'test.dev:80';
+		$this->assertSame( 'test.dev', $hercules->get_domain() );
+
+		$_SERVER['HTTP_HOST'] = 'test.dev:443';
+		$this->assertSame( 'test.dev', $hercules->get_domain() );
+	}
+
 	public function test_get_site_url() {
 		$hercules = Hercules::instance();
 		$hercules->muplugins_loaded();
