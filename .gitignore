@@ -1,0 +1,6 @@
+coverage
+node_modules
+vendor
+*.log
+test.php
+composer.lock

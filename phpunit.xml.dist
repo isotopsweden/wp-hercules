@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+  backupStaticAttributes="false"
+  beStrictAboutTestsThatDoNotTestAnything="true"
+  beStrictAboutOutputDuringTests="true"
+  bootstrap="vendor/frozzare/wp-test-suite/bootstrap.php"
+  colors="true"
+  convertErrorsToExceptions="true"
+  convertNoticesToExceptions="true"
+  convertWarningsToExceptions="true"
+  processIsolation="false"
+  stopOnError="false"
+  stopOnFailure="false"
+  syntaxCheck="true"
+  verbose="true"
+  >
+  <php>
+    <const name="WP_TESTS_MULTISITE" value="1" />
+  </php>
+  <testsuites>
+    <testsuite name="{plugin-name} Test Suite">
+      <directory suffix=".php">./tests/</directory>
+      <exclude>./tests/fixtures</exclude>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./src</directory>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="coverage-clover" target="./tmp/clover.xml" charset="UTF-8" />
+  </logging>
+</phpunit>
