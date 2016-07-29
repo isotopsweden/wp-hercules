@@ -67,7 +67,7 @@ final class Hercules {
 	/**
 	 * Find site by domain.
 	 *
-	 * @param  string $domain
+	 * @param  string $domain The domain to look for.
 	 *
 	 * @return WP_Site|null
 	 */
@@ -83,6 +83,23 @@ final class Hercules {
 	}
 
 	/**
+	 * Get value by key from site.
+	 *
+	 * @param  string $key     The key to look for.
+	 * @param  mixed  $default Default null.
+	 * @param  int    $blog_id The blog id. Default zero.
+	 *
+	 * @return mixed
+	 */
+	public function get( $key, $default = null, $blog_id = 0 ) {
+		if ( $site = $this->get_site( $blog_id ) ) {
+			return isset( $site->$key ) ? $site->$key : $default;
+		}
+
+		return $default;
+	}
+
+	/**
 	 * Get domain from current site or from `HTTP_HOST`.
 	 *
 	 * @param  int $blog_id Optional, default zero.
@@ -90,8 +107,8 @@ final class Hercules {
 	 * @return string
 	 */
 	public function get_domain( $blog_id = 0 ) {
-		if ( ! empty( $blog_id ) && $site = $this->get_site( $blog_id ) ) {
-			return $site->domain;
+		if ( ! empty( $blog_id ) && $domain = $this->get( 'domain', null, $blog_id ) ) {
+			return $domain;
 		}
 
 		if ( $this->site instanceof WP_Site ) {
@@ -119,10 +136,17 @@ final class Hercules {
 	 * @return WP_Site|null
 	 */
 	public function get_site( $blog_id = 0 ) {
-		if ( ! empty( $blog_id ) && $blog = get_blog_details( $blog_id ) ) {
-			$this->site = new WP_Site( $blog );
+		if ( ! empty( $blog_id ) ) {
+			// Check so the current site is the site we looking for or
+			// try to get it from the database.
+			if ( $this->site instanceof WP_Site && (int)$this->site->blog_id === $blog_id ) {
+				return $this->site;
+			} else if ( $blog_details = get_blog_details( $blog_id ) ) {
+				$this->site = new WP_Site( $blog_details );
+			}
 		}
 
+		// If a site exists, return it.
 		if ( $this->site instanceof WP_Site ) {
 			return $this->site;
 		}
@@ -144,12 +168,13 @@ final class Hercules {
 	}
 
 	/**
-	 * Mangle url to right domain.
+	 * Mangle url to right domain, it will fetch the site
+	 * if `$blog_id` is different from the existing one.
 	 *
-	 * @param  string $url
-	 * @param  string $path
-	 * @param  string $orig_scheme
-	 * @param  int    $blog_id
+	 * @param  string $url         The url.
+	 * @param  string $path        The path. Not used.
+	 * @param  string $orig_scheme The scheme. Not used.
+	 * @param  int    $blog_id     The blog id.
 	 *
 	 * @return string
 	 */

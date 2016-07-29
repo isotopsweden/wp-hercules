@@ -60,6 +60,24 @@ class Hercules_Test extends WP_UnitTestCase {
 		$hercules->destroy();
 	}
 
+	public function test_get() {
+		$hercules = Hercules::instance();
+
+		$_SERVER['HTTP_HOST'] = 'test.dev';
+		$hercules->start();
+
+		$this->assertSame( 'test.dev', $hercules->get( 'domain' ) );
+		$this->assertSame( 1, $hercules->get( 'blog_id' ) );
+		$hercules->destroy();
+
+		$_SERVER['HTTP_HOST'] = 'test-en.dev';
+		$hercules->start();
+
+		$this->assertSame( 'test-en.dev', $hercules->get( 'domain' ) );
+		$this->assertSame( 2, $hercules->get( 'blog_id' ) );
+		$hercules->destroy();
+	}
+
 	public function test_get_domain() {
 		$hercules = Hercules::instance();
 
