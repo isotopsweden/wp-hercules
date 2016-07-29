@@ -67,7 +67,7 @@ final class Hercules {
 	/**
 	 * Find site by domain.
 	 *
-	 * @param  string $domain
+	 * @param  string $domain The domain to look for.
 	 *
 	 * @return WP_Site|null
 	 */
@@ -83,21 +83,44 @@ final class Hercules {
 	}
 
 	/**
-	 * Get current domain.
+	 * Get value by key from site.
+	 *
+	 * @param  string $key     The key to look for.
+	 * @param  mixed  $default Default null.
+	 * @param  int    $blog_id The blog id. Default zero.
+	 *
+	 * @return mixed
+	 */
+	public function get( $key, $default = null, $blog_id = 0 ) {
+		if ( $site = $this->get_site( $blog_id ) ) {
+			return isset( $site->$key ) ? $site->$key : $default;
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Get domain from current site or from `HTTP_HOST`.
+	 *
+	 * @param  int $blog_id Optional, default zero.
 	 *
 	 * @return string
 	 */
-	public function get_domain() {
+	public function get_domain( $blog_id = 0 ) {
+		if ( ! empty( $blog_id ) && $domain = $this->get( 'domain', null, $blog_id ) ) {
+			return $domain;
+		}
+
 		if ( $this->site instanceof WP_Site ) {
 			return $this->site->domain;
 		}
 
 		$domain = strtolower( stripslashes( $_SERVER['HTTP_HOST'] ) );
 
-		if ( substr( $domain, -3 ) == ':80' ) {
+		if ( substr( $domain, -3 ) === ':80' ) {
 			$domain = substr( $domain, 0, -3 );
 			$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -3 );
-		} elseif ( substr( $domain, -4 ) == ':443' ) {
+		} else if ( substr( $domain, -4 ) === ':443' ) {
 			$domain = substr( $domain, 0, -4 );
 			$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -4 );
 		}
@@ -108,13 +131,27 @@ final class Hercules {
 	/**
 	 * Get site by the current domain.
 	 *
+	 * @param  int $blog_id Optional, default zero.
+	 *
 	 * @return WP_Site|null
 	 */
-	public function get_site() {
+	public function get_site( $blog_id = 0 ) {
+		if ( ! empty( $blog_id ) ) {
+			// Check so the current site is the site we looking for or
+			// try to get it from the database.
+			if ( $this->site instanceof WP_Site && (int)$this->site->blog_id === $blog_id ) {
+				return $this->site;
+			} else if ( $blog_details = get_blog_details( $blog_id ) ) {
+				$this->site = new WP_Site( $blog_details );
+			}
+		}
+
+		// If a site exists, return it.
 		if ( $this->site instanceof WP_Site ) {
 			return $this->site;
 		}
 
+		// Find site by current domain.
 		return $this->site = $this->find_site( $this->get_domain() );
 	}
 
@@ -132,30 +169,34 @@ final class Hercules {
 	}
 
 	/**
-	 * Mangle url to right domain.
+	 * Mangle url to right domain, it will fetch the site
+	 * if `$blog_id` is different from the existing one.
 	 *
-	 * @param  string $url
+	 * @param  string $url         The url.
+	 * @param  string $path        The path. Not used.
+	 * @param  string $orig_scheme The scheme. Not used.
+	 * @param  int    $blog_id     The blog id.
 	 *
 	 * @return string
 	 */
-	public function mangle_url( $url ) {
+	public function mangle_url( $url, $path = '', $orig_scheme = '', $blog_id = 0 ) {
 		$domain = parse_url( $url, PHP_URL_HOST );
 		$regex = '#^(\w+://)' . preg_quote( $domain, '#' ) . '#i';
 
-		return preg_replace( $regex, '${1}' . $this->get_domain(), $url );
+		return preg_replace( $regex, '${1}' . $this->get_domain( $blog_id ), $url );
 	}
 
 	/**
 	 * Must use plugins loaded hook.
 	 */
 	public function muplugins_loaded() {
-		add_filter( 'site_url', [$this, 'mangle_url'], -10 );
-		add_filter( 'home_url', [$this, 'mangle_url'], -10 );
+		add_filter( 'site_url', [$this, 'mangle_url'], -10, 4 );
+		add_filter( 'home_url', [$this, 'mangle_url'], -10, 4 );
 
 		// Only change network site urls for main site.
 		if ( is_main_site() ) {
-			add_filter( 'network_site_url', [$this, 'mangle_url'], -10 );
-			add_filter( 'network_home_url', [$this, 'mangle_url'], -10 );
+			add_filter( 'network_site_url', [$this, 'mangle_url'], -10, 4 );
+			add_filter( 'network_home_url', [$this, 'mangle_url'], -10, 4 );
 		}
 
 		$this->set_cookie_domain();
@@ -192,10 +233,12 @@ final class Hercules {
 
 	/**
 	 * Start domain mapping.
+	 *
+	 * @return bool
 	 */
 	public function start() {
 		if ( ! ( $site = $this->get_site() ) ) {
-			return;
+			return false;
 		}
 
 		// Set global variables.
@@ -207,5 +250,8 @@ final class Hercules {
 		 * Hercules is loaded.
 		 */
 		do_action( 'hercules_loaded' );
+
+		// Started!
+		return true;
 	}
 }

@@ -2,7 +2,7 @@
 
 > Requires PHP 5.6 and WordPress 4.5
 
-Simple domain mapping.
+Simple domain mapping for top domains.
 
 ## Installation
 
