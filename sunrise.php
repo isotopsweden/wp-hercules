@@ -1,7 +1,6 @@
 <?php
 
-// Load Hercules class.
-require_once __DIR__ . '/src/class-hercules.php';
+use Isotop\WordPress\Hercules\Hercules;
 
 // Run Hercules!
 Hercules::instance()->boot();
