@@ -151,6 +151,7 @@ final class Hercules {
 			return $this->site;
 		}
 
+		// Find site by current domain.
 		return $this->site = $this->find_site( $this->get_domain() );
 	}
 
