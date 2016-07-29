@@ -41,7 +41,9 @@ class Hercules_Test extends WP_UnitTestCase {
 			return new WP_Site( (object) ['blog_id' => 1, 'domain' => 'test.dev', 'site_id' => 1] );
 		}
 
-		return new WP_Site( (object) ['blog_id' => 2, 'domain' => 'test-en.dev', 'site_id' => 1] );
+		if ( $domain === 'test-en.dev' ) {
+			return new WP_Site( (object) ['blog_id' => 2, 'domain' => 'test-en.dev', 'site_id' => 1] );
+		}
 	}
 
 	public function test_domain_mapping() {
