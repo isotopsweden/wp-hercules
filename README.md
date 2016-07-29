@@ -14,7 +14,7 @@ composer require isotopsweden/hercules
 
 Create `wp-content/sunrise.php`
 
-```
+```php
 <?php
 
 // Default mu-plugins directory if you haven't set it.
