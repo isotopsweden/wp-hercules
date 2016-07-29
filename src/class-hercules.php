@@ -100,10 +100,10 @@ final class Hercules {
 
 		$domain = strtolower( stripslashes( $_SERVER['HTTP_HOST'] ) );
 
-		if ( substr( $domain, -3 ) == ':80' ) {
+		if ( substr( $domain, -3 ) === ':80' ) {
 			$domain = substr( $domain, 0, -3 );
 			$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -3 );
-		} elseif ( substr( $domain, -4 ) == ':443' ) {
+		} else if ( substr( $domain, -4 ) === ':443' ) {
 			$domain = substr( $domain, 0, -4 );
 			$_SERVER['HTTP_HOST'] = substr( $_SERVER['HTTP_HOST'], 0, -4 );
 		}
