@@ -1,6 +1,6 @@
 # Hercules
 
-> Requires PHP 5.5.9
+> Requires PHP 5.6 and WordPress 4.5
 
 Simple domain mapping.
 
