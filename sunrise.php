@@ -2,5 +2,5 @@
 
 use Isotop\WordPress\Hercules\Hercules;
 
-// Run Hercules!
+// Boot Hercules!
 Hercules::instance()->boot();
