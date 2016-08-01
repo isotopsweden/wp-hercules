@@ -18,6 +18,7 @@
   "autoload": {
     "classmap": ["src/"],
     "files": [
+      "src/cli.php",
       "src/helpers.php"
     ]
   },
