@@ -16,7 +16,7 @@ final class Hercules {
 	/**
 	 * Current site.
 	 *
-	 * @var WP_Site
+	 * @var \WP_Site
 	 */
 	protected $site;
 
@@ -141,7 +141,7 @@ final class Hercules {
 	 *
 	 * @param  int $blog_id Optional, default zero.
 	 *
-	 * @return WP_Site|null
+	 * @return \WP_Site|null
 	 */
 	public function get_site( $blog_id = 0 ) {
 		if ( ! empty( $blog_id ) ) {
