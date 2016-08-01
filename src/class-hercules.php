@@ -25,6 +25,14 @@ final class Hercules {
 	 */
 	protected function __construct() {
 		add_action( 'muplugins_loaded', [$this, 'muplugins_loaded'] );
+		add_action( 'load-site-new.php', [$this, 'site_new'] );
+	}
+
+	/**
+	 * Disable site new.
+	 */
+	public function site_new() {
+		wp_die( 'Site new is disabled. Please use WP-CLI instead.' );
 	}
 
 	/**
