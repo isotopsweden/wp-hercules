@@ -147,7 +147,7 @@ final class Hercules {
 		if ( ! empty( $blog_id ) ) {
 			// Check so the current site is the site we looking for or
 			// try to get it from the database.
-			if ( $this->site instanceof WP_Site && (int)$this->site->blog_id === $blog_id ) {
+			if ( $this->site instanceof WP_Site && (int) $this->site->blog_id === $blog_id ) {
 				return $this->site;
 			} else if ( $blog_details = get_blog_details( $blog_id ) ) {
 				$this->site = new WP_Site( $blog_details );
