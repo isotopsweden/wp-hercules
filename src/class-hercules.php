@@ -191,6 +191,10 @@ final class Hercules {
 		$domain = parse_url( $url, PHP_URL_HOST );
 		$regex = '#^(\w+://)' . preg_quote( $domain, '#' ) . '#i';
 
+		if ( empty( $blog_id ) ) {
+			$blog_id = (int) $GLOBALS['blog_id'];
+		}
+
 		return preg_replace( $regex, '${1}' . $this->get_domain( $blog_id ), $url );
 	}
 
