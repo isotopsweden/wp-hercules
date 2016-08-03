@@ -2,7 +2,7 @@
   "name": "isotopsweden/wp-hercules",
   "type": "wordpress-muplugin",
   "license": "MIT",
-  "description": "Simple domain mapping",
+  "description": "Simple domain mapping for top domains",
   "homepage": "https://github.com/isotopsweden/wp-hercules",
   "authors": [
     {
