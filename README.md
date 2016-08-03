@@ -1,6 +1,6 @@
 # Hercules [![Build Status](https://travis-ci.org/isotopsweden/wp-hercules.svg?branch=master)](https://travis-ci.org/isotopsweden/wp-hercules)
 
-> Requires PHP 5.6 and WordPress 4.5
+> Requires PHP 5.5.9 and WordPress 4.5
 
 Simple domain mapping for top domains.
 
