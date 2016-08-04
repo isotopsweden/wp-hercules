@@ -7,7 +7,7 @@ Simple domain mapping for top domains.
 ## Installation
 
 ```
-composer require isotopsweden/hercules
+composer require isotopsweden/wp-hercules
 ```
 
 ## Usage
