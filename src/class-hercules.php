@@ -1,6 +1,6 @@
 <?php
 
-namespace Isotop\WordPress\Hercules;
+namespace Isotop\Hercules;
 
 use WP_Site;
 
@@ -9,7 +9,7 @@ final class Hercules {
 	/**
 	 * The class instance.
 	 *
-	 * @var \Isotop\WordPress\Hercules\Hercules
+	 * @var \Isotop\Hercules\Hercules
 	 */
 	protected static $instance;
 
@@ -77,7 +77,7 @@ final class Hercules {
 	 *
 	 * @param  string $domain The domain to look for.
 	 *
-	 * @return WP_Site|null
+	 * @return \WP_Site|null
 	 */
 	protected function find_site( $domain ) {
 		if ( empty( $domain ) || ! is_string( $domain ) ) {

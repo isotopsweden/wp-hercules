@@ -3,8 +3,8 @@
 /**
  * Get Hercules instance.
  *
- * @return \Isotop\WordPress\Hercules\Hercules
+ * @return \Isotop\Hercules\Hercules
  */
 function hercules() {
-	return \Isotop\WordPress\Hercules\Hercules::instance();
+	return \Isotop\Hercules\Hercules::instance();
 }
