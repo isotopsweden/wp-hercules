@@ -1,6 +1,6 @@
 <?php
 
-use Isotop\WordPress\Hercules\Hercules;
+use Isotop\Hercules\Hercules;
 
 // Boot Hercules!
 Hercules::instance()->boot();
