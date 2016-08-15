@@ -39,4 +39,4 @@ wp site create --domain=example.com
 
 ## License
 
-MIT
+MIT © Isotop
