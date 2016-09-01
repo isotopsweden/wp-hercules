@@ -2,12 +2,12 @@
   "name": "isotopsweden/wp-hercules",
   "type": "wordpress-muplugin",
   "license": "MIT",
-  "description": "Simple domain mapping",
+  "description": "Simple domain mapping for top domains",
   "homepage": "https://github.com/isotopsweden/wp-hercules",
   "authors": [
     {
       "name": "Fredrik Forsmo",
-      "email": "fredrik.forsmo@gmail.com",
+      "email": "fredrik.forsmo@isotop.se",
       "homepage": "https://github.com/frozzare"
     },
     {
@@ -18,6 +18,7 @@
   "autoload": {
     "classmap": ["src/"],
     "files": [
+      "src/cli.php",
       "src/helpers.php"
     ]
   },
@@ -26,16 +27,20 @@
     "plugin"
   ],
   "require": {
-    "php": ">=5.5.9",
+    "php": "^5.5.9 || ^7.0",
     "composer/installers": "~1.0"
   },
   "require-dev": {
     "frozzare/wp-test-suite": "~1.0",
-    "wp-coding-standards/wpcs": "dev-develop"
+    "isotopsweden/isotopcs": "dev-master"
   },
   "scripts": {
-    "post-install-cmd": "if [ -f vendor/bin/phpcs ]; then \"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs; fi",
-    "post-update-cmd" : "if [ -f vendor/bin/phpcs ]; then \"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs; fi"
+    "config-isotopcs": [
+      "if [ -f vendor/bin/phpcs ]; then \"vendor/bin/phpcs\" --config-set installed_paths ../../../vendor/wp-coding-standards/wpcs,../../../vendor/isotopsweden/isotopcs; fi",
+      "if [ -f vendor/bin/phpcs ]; then \"vendor/bin/phpcs\" --config-set default_standard Isotop; fi"
+    ],
+    "post-install-cmd": "composer config-isotopcs",
+    "post-update-cmd" : "composer config-isotopcs"
   },
   "minimum-stability": "dev",
   "prefer-stable": true

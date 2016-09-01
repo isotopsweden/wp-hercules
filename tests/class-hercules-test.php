@@ -1,8 +1,8 @@
 <?php
 
-namespace Isotop\Tests\WordPress\Hercules;
+namespace Isotop\Tests\Hercules;
 
-use Isotop\WordPress\Hercules\Hercules;
+use Isotop\Hercules\Hercules;
 use WP_Site;
 use WP_UnitTestCase;
 

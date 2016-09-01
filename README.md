@@ -1,13 +1,13 @@
-# Hercules
+# Hercules [![Build Status](https://travis-ci.org/isotopsweden/wp-hercules.svg?branch=master)](https://travis-ci.org/isotopsweden/wp-hercules)
 
-> Requires PHP 5.6 and WordPress 4.5
+> Requires PHP 5.5.9 and WordPress 4.5
 
 Simple domain mapping for top domains.
 
 ## Installation
 
 ```
-composer require isotopsweden/hercules
+composer require isotopsweden/wp-hercules
 ```
 
 ## Usage
@@ -29,6 +29,14 @@ Additionally, in order for `sunrise.php` to be loaded, you must add the followin
 define( 'SUNRISE', true );
 ```
 
+## Create new site
+
+With Hercules installed you should use [wp-cli](https://wp-cli.org) to add new site instead of `network/site-new.php`, this is because that Hercules modifies `wp site create` command so you can add a domain instead of just a slug, `SUBDOMAIN_INSTALL` should be set to `true`
+
+```
+wp site create --domain=example.com
+```
+
 ## License
 
-MIT
+MIT © Isotop

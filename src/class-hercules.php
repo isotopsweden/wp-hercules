@@ -1,6 +1,6 @@
 <?php
 
-namespace Isotop\WordPress\Hercules;
+namespace Isotop\Hercules;
 
 use WP_Site;
 
@@ -9,14 +9,14 @@ final class Hercules {
 	/**
 	 * The class instance.
 	 *
-	 * @var \Isotop\WordPress\Hercules\Hercules
+	 * @var \Isotop\Hercules\Hercules
 	 */
 	protected static $instance;
 
 	/**
 	 * Current site.
 	 *
-	 * @var WP_Site
+	 * @var \WP_Site
 	 */
 	protected $site;
 
@@ -25,6 +25,14 @@ final class Hercules {
 	 */
 	protected function __construct() {
 		add_action( 'muplugins_loaded', [$this, 'muplugins_loaded'] );
+		add_action( 'load-site-new.php', [$this, 'site_new'] );
+	}
+
+	/**
+	 * Disable site new.
+	 */
+	public function site_new() {
+		wp_die( 'Site new is disabled. Please use WP-CLI instead.' );
 	}
 
 	/**
@@ -69,7 +77,7 @@ final class Hercules {
 	 *
 	 * @param  string $domain The domain to look for.
 	 *
-	 * @return WP_Site|null
+	 * @return \WP_Site|null
 	 */
 	protected function find_site( $domain ) {
 		if ( empty( $domain ) || ! is_string( $domain ) ) {
@@ -133,13 +141,13 @@ final class Hercules {
 	 *
 	 * @param  int $blog_id Optional, default zero.
 	 *
-	 * @return WP_Site|null
+	 * @return \WP_Site|null
 	 */
 	public function get_site( $blog_id = 0 ) {
 		if ( ! empty( $blog_id ) ) {
 			// Check so the current site is the site we looking for or
 			// try to get it from the database.
-			if ( $this->site instanceof WP_Site && (int)$this->site->blog_id === $blog_id ) {
+			if ( $this->site instanceof WP_Site && (int) $this->site->blog_id === $blog_id ) {
 				return $this->site;
 			} else if ( $blog_details = get_blog_details( $blog_id ) ) {
 				$this->site = new WP_Site( $blog_details );
@@ -182,6 +190,10 @@ final class Hercules {
 	public function mangle_url( $url, $path = '', $orig_scheme = '', $blog_id = 0 ) {
 		$domain = parse_url( $url, PHP_URL_HOST );
 		$regex = '#^(\w+://)' . preg_quote( $domain, '#' ) . '#i';
+
+		if ( empty( $blog_id ) ) {
+			$blog_id = (int) $GLOBALS['blog_id'];
+		}
 
 		return preg_replace( $regex, '${1}' . $this->get_domain( $blog_id ), $url );
 	}
