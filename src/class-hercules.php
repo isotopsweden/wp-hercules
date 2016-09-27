@@ -88,6 +88,15 @@ final class Hercules {
 		if ( $site = get_site_by_path( $domain, '' ) ) {
 			return $site instanceof WP_Site ? $site : new WP_Site( $site );
 		}
+
+		// Redirect to main site if no site is found.
+		if ( $site = get_site( 1 ) ) {
+			$scheme = is_ssl() ? 'https' : 'http';
+			$uri = sprintf( '%s://%s', $scheme, $site->domain );
+
+			header( 'Location: ' . $uri );
+			die;
+		}
 	}
 
 	/**
