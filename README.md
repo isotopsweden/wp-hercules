@@ -26,7 +26,7 @@ require WPMU_PLUGIN_DIR . '/wp-hercules/sunrise.php';
 Additionally, in order for `sunrise.php` to be loaded, you must add the following to your `wp-config.php`:
 
 ```php
-define( 'SUNRISE', true );
+define( 'SUNRISE', 'on' );
 ```
 
 ## Create new site
