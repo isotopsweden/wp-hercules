@@ -34,7 +34,7 @@ define( 'SUNRISE', true );
 With Hercules installed you should use [wp-cli](https://wp-cli.org) to add new site instead of `network/site-new.php`, this is because that Hercules modifies `wp site create` command so you can add a domain instead of just a slug, `SUBDOMAIN_INSTALL` should be set to `true`
 
 ```
-wp site create --domain=example.com
+wp site create --slug=example.com
 ```
 
 ## License
