@@ -207,8 +207,8 @@ final class Hercules {
 	}
 
 	/**
-	 * Use site url constant if defined instead
-	 * of database option.
+	 * Dynamic build site url if possible
+	 * or return database url.
 	 *
 	 * @param  mixed $url
 	 *
@@ -223,8 +223,8 @@ final class Hercules {
 	}
 
 	/**
-	 * Use home url constant if defined instead
-	 * of database option.
+	 * Dynamic build home url if possible
+	 * or return database url.
 	 *
 	 * @param  mixed $url
 	 *
