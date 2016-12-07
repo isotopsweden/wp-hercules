@@ -168,6 +168,31 @@ class Hercules_Test extends WP_UnitTestCase {
 		$hercules->destroy();
 	}
 
+	public function test_pre_option_siteurl() {
+		$hercules = Hercules::instance();
+
+		$this->assertSame( 'http://test.dev', $hercules->pre_option_siteurl( 'http://test.dev' ) );
+
+		$_SERVER['HTTP_HOST'] = 'example.dev';
+
+		define( 'WP_SITEURL', ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'] . '/wp' );
+		$this->assertSame( 'http://example.dev/wp', $hercules->pre_option_siteurl( 'http://test.dev' ) );
+
+		define( 'WP_CLI', true );
+		$this->assertSame( 'http://example.dev/', $hercules->pre_option_siteurl( 'http://test.dev' ) );
+	}
+
+	public function test_pre_option_home() {
+		$hercules = Hercules::instance();
+
+		$this->assertSame( 'http://test.dev', $hercules->pre_option_home( 'http://test.dev' ) );
+
+		$_SERVER['HTTP_HOST'] = 'example.dev';
+
+		define( 'WP_HOME', ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'] );
+		$this->assertSame( 'http://example.dev', $hercules->pre_option_home( 'http://test.dev' ) );
+	}
+
 	public function test_start() {
 		$hercules = Hercules::instance();
 

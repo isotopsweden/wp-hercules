@@ -215,11 +215,11 @@ final class Hercules {
 	 * @return mixed $url
 	 */
 	public function pre_option_siteurl( $url ) {
-		if ( preg_match( '/\/wp\/$/', ABSPATH ) && ! empty( $_SERVER['HTTP_HOST'] ) ) {
-			$url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'];
+		if ( defined( 'WP_SITEURL' ) ) {
+			$url = WP_SITEURL;
 
-			if ( ! defined( 'WP_CLI' ) ) {
-				$url .= '/wp';
+			if ( defined( 'WP_CLI' ) ) {
+				$url = str_replace( 'wp', '', WP_SITEURL );
 			}
 
 			return $url;
@@ -237,8 +237,8 @@ final class Hercules {
 	 * @return mixed $url
 	 */
 	public function pre_option_home( $url ) {
-		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
-			return ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'];
+		if ( defined( 'WP_HOME' ) ) {
+			return WP_HOME;
 		}
 
 		return $url;
