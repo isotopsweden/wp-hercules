@@ -89,14 +89,6 @@ final class Hercules {
 			return $site instanceof WP_Site ? $site : new WP_Site( $site );
 		}
 
-		// Redirect to main site if no site is found.
-		if ( $site = get_site( 1 ) ) {
-			$scheme = is_ssl() ? 'https' : 'http';
-			$uri = sprintf( '%s://%s', $scheme, $site->domain );
-
-			header( 'Location: ' . $uri );
-			die;
-		}
 	}
 
 	/**
@@ -208,11 +200,48 @@ final class Hercules {
 	}
 
 	/**
+	 * Use siteurl constant if defined instead
+	 * of database option.
+	 *
+	 * @param  mixed $url
+	 *
+	 * @return mixed $url
+	 */
+	public function pre_option_siteurl( $url ) {
+		if ( preg_match( '/\/wp\/$/', ABSPATH ) && ! empty( $_SERVER['HTTP_HOST'] ) ) {
+			return ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'] . '/wp';
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Use siteurl constant if defined instead
+	 * of database option.
+	 *
+	 * @param  mixed $url
+	 *
+	 * @return mixed $url
+	 */
+	public function pre_option_home( $url ) {
+		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
+			return ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'];
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Must use plugins loaded hook.
 	 */
 	public function muplugins_loaded() {
+		// Replace current site url and home url with right domain.
 		add_filter( 'site_url', [$this, 'mangle_url'], -10, 4 );
 		add_filter( 'home_url', [$this, 'mangle_url'], -10, 4 );
+
+		// Change database option for site url and home url to the current one.
+		add_filter( 'pre_option_siteurl', [$this, 'pre_option_siteurl'] );
+		add_filter( 'pre_option_home', [$this, 'pre_option_home'] );
 
 		// Only change network site urls for main site.
 		if ( is_main_site() ) {
