@@ -89,6 +89,13 @@ final class Hercules {
 			return $site instanceof WP_Site ? $site : new WP_Site( $site );
 		}
 
+		if ( $site = get_site( 1 ) ) {
+			$scheme = is_ssl() ? 'https' : 'http';
+			$uri = sprintf( '%s://%s', $scheme, $site->domain );
+
+			header( 'Location: ' . $uri );
+			die;
+		}
 	}
 
 	/**
@@ -209,7 +216,7 @@ final class Hercules {
 	 */
 	public function pre_option_siteurl( $url ) {
 		if ( preg_match( '/\/wp\/$/', ABSPATH ) && ! empty( $_SERVER['HTTP_HOST'] ) ) {
-			return ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'] . '/wp';
+			return ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . '/wp';
 		}
 
 		return $url;
@@ -225,7 +232,7 @@ final class Hercules {
 	 */
 	public function pre_option_home( $url ) {
 		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
-			return ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'];
+			return ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'];
 		}
 
 		return $url;
