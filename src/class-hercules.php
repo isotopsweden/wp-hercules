@@ -216,7 +216,13 @@ final class Hercules {
 	 */
 	public function pre_option_siteurl( $url ) {
 		if ( preg_match( '/\/wp\/$/', ABSPATH ) && ! empty( $_SERVER['HTTP_HOST'] ) ) {
-			return ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . '/wp';
+			$url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'];
+
+			if ( ! defined( 'WP_CLI' ) ) {
+				$url .= '/wp';
+			}
+
+			return $url;
 		}
 
 		return $url;
