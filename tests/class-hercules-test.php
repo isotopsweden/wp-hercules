@@ -173,13 +173,20 @@ class Hercules_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 'http://test.dev', $hercules->pre_option_siteurl( 'http://test.dev' ) );
 
-		$_SERVER['HTTP_HOST'] = 'example.dev';
+		$_SERVER['HTTP_HOST'] = 'test.dev';
 
 		define( 'WP_SITEURL', ( empty( $_SERVER['HTTPS'] ) ? 'http' : 'https' ) . '://' . $_SERVER['HTTP_HOST'] . '/wp' );
-		$this->assertSame( 'http://example.dev/wp', $hercules->pre_option_siteurl( 'http://test.dev' ) );
+		$this->assertSame( 'http://test.dev/wp', $hercules->pre_option_siteurl( 'http://example.dev' ) );
 
 		define( 'WP_CLI', true );
-		$this->assertSame( 'http://example.dev/', $hercules->pre_option_siteurl( 'http://test.dev' ) );
+		$this->assertSame( 'http://test.dev/', $hercules->pre_option_siteurl( 'http://example.dev' ) );
+
+		$hercules->start();
+		$this->assertSame( 'http://test.dev/wp/wp-admin/', $hercules->mangle_url( 'http://test.dev/wp-admin/' ) );
+		$this->assertSame( 'http://test.dev/wp/wp-admin/post-new.php?post_type=page', $hercules->mangle_url( 'http://test.dev/wp-admin/post-new.php?post_type=page' ) );
+		$this->assertSame( 'http://test.dev/wp/wp-admin/post-new.php?post_type=page', $hercules->mangle_url( 'http://test.dev/wp/wp-admin/post-new.php?post_type=page' ) );
+
+		$hercules->destroy();
 	}
 
 	public function test_pre_option_home() {

@@ -203,6 +203,16 @@ final class Hercules {
 			$blog_id = (int) $GLOBALS['blog_id'];
 		}
 
+		// Check if `/wp` should be added if `WP_SITEURL` contains `/wp` and url contains `/wp-`. Will fix issues with network pages.
+		if ( defined( 'WP_SITEURL' ) && strpos( WP_SITEURL, '/wp' ) !== false && strpos( $url, '/wp/' ) === false && strpos( $url, '/wp-' ) !== false ) {
+			$path = parse_url( $url, PHP_URL_PATH );
+
+			// Only add `/wp/` path don't include `/wp-json`.
+			if ( ! is_null( $path ) && strpos( $path, '/wp-json' ) === false ) {
+				$url = str_replace( $path, '/wp/' . ltrim( $path, '/' ), $url );
+			}
+		}
+
 		return preg_replace( $regex, '${1}' . $this->get_domain( $blog_id ), $url );
 	}
 
